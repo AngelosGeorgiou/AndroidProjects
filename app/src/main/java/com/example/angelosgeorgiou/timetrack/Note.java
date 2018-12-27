@@ -15,12 +15,13 @@ public class Note {
     private String description;
 //  @ColumnInfo(name = "column_info")
     private int time;
-    //Todo add date
+    private int date;
 
-    public Note(String title, String description, int time) {
+    public Note(String title, String description, int time, int date) {
         this.title = title;
         this.description = description;
         this.time = time;
+        this.date = date;
     }
 
     public void setId(int id) {
@@ -40,4 +41,6 @@ public class Note {
     }
 
     public int getTime() { return time; }
+
+    public int getDate(){ return  date;}
 }
