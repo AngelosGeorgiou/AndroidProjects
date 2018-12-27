@@ -3,8 +3,13 @@ package com.example.angelosgeorgiou.timetrack;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -35,22 +40,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
-
         setTitle(currentDate);
-
-        final int abTitleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        findViewById(abTitleId).setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(), "date picker");
-
-            }
-        });
 
         FloatingActionButton buttonAddNote = findViewById(R.id.button_add_note);
         buttonAddNote.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddNoteActivity.class);
@@ -111,4 +105,28 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         this.calendar.set(Calendar.MONTH,month);
         this.calendar.set(Calendar.DAY_OF_MONTH,day);
     }
+
+    public void selectDate() {
+        DialogFragment datePicker = new DatePickerFragment();
+        datePicker.show(getSupportFragmentManager(), "date picker");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.select_date_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.select_date:
+                selectDate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }
