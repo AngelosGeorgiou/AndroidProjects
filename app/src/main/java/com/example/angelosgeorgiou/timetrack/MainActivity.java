@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(@Nullable List<Note> notes) {
-                Toast.makeText(MainActivity.this,"kinko", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"mainActivity", Toast.LENGTH_LONG).show();
                 adapter.setNotes(notes);
             }
         });
@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_NOTE_REQUEST && resultCode == RESULT_OK){
             String title = data.getStringExtra(AddNoteActivity.EXTRA_TITLE);
             String description = data.getStringExtra(AddNoteActivity.EXTRA_DESCRIPTION);
-            int priority = data.getIntExtra(AddNoteActivity.EXTRA_PRIORITY,1);
+            int time = data.getIntExtra(AddNoteActivity.EXTRA_TIME,1);
 
-            Note note = new Note(title, description,priority);
+            Note note = new Note(title, description,time);
             noteViewModel.insert(note);
 
             Toast.makeText(this,"Note saved",Toast.LENGTH_SHORT).show();

@@ -1,6 +1,8 @@
 package com.example.angelosgeorgiou.timetrack;
 
 
+import android.widget.DatePicker;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -12,14 +14,15 @@ public class Note {
     private String title;
     private String description;
 //  @ColumnInfo(name = "column_info")
-    private int priority;
+    private int time;
+    //Todo add date
 
-    public Note(String title, String description, int priority) {
+    public Note(String title, String description, int time) {
         this.title = title;
         this.description = description;
-        this.priority = priority;
+        this.time = time;
     }
-//ToDo replace priority with time
+
     public void setId(int id) {
         this.id = id;
     }
@@ -36,7 +39,5 @@ public class Note {
         return description;
     }
 
-    public int getPriority() {
-        return priority;
-    }
+    public int getTime() { return time; }
 }
