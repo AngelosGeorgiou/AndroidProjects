@@ -12,16 +12,21 @@ import androidx.fragment.app.DialogFragment;
 
 public class DatePickerFragment extends DialogFragment {
 
+    private Calendar c;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        Calendar c = Calendar.getInstance();
-
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        Bundle bundle = getArguments();
+        int intCalendar = bundle.getInt("calendar");
+        int year = intCalendar/10000;
+        int month = intCalendar / 100 % 100 - 1;
+        int day = intCalendar % 100;
 
         return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
     }
+
+
+
 }

@@ -34,6 +34,7 @@ public class NoteRepository {
     }
 
     public LiveData<List<Note>> getAllNotes() {
+
         return allNotes;
     }
 

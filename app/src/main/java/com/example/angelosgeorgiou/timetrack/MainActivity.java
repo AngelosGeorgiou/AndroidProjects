@@ -8,8 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,13 +29,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public static final int ADD_NOTE_REQUEST = 1;
 
     private NoteViewModel noteViewModel;
-    public Calendar calendar = Calendar.getInstance();
+    public Calendar calendar;
+    private final NoteAdapter adapter = new NoteAdapter();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        calendar = Calendar.getInstance();
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         setTitle(currentDate);
@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
-
-        final NoteAdapter adapter = new NoteAdapter();
         recyclerView.setAdapter(adapter);
 
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
@@ -69,6 +67,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
     }
 
+    public int getIntDate(Calendar c){
+        //java calendar months begin with 0 ¯\_(ツ)_/¯
+        return c.get(Calendar.YEAR) *10000 + (c.get(Calendar.MONTH)+1)*100 + c.get(Calendar.DAY_OF_MONTH);
+    }
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             String title = data.getStringExtra(AddNoteActivity.EXTRA_TITLE);
             String description = data.getStringExtra(AddNoteActivity.EXTRA_DESCRIPTION);
             int time = data.getIntExtra(AddNoteActivity.EXTRA_TIME,1);
-            int date = getCalendar().YEAR *10000 + getCalendar().MONTH*100 +getCalendar().DAY_OF_MONTH;
+            int date = getIntDate(getCalendar());
 
             Note note = new Note(title, description, time, date);
             noteViewModel.insert(note);
@@ -107,7 +112,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     public void selectDate() {
+        Bundle bundleCalendar = new Bundle();
+        bundleCalendar.putInt("calendar",getIntDate(calendar));
         DialogFragment datePicker = new DatePickerFragment();
+        datePicker.setArguments(bundleCalendar);
         datePicker.show(getSupportFragmentManager(), "date picker");
     }
 

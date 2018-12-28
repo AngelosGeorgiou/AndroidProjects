@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,9 +27,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteHolder holder, int position) {
         Note currentNote = notes.get(position);
+        int minutes = currentNote.getTime()%100;
+        String sZero = new String("0");
+        String sMinute = new String(String.valueOf(minutes));
+        if (minutes<10)
+            sMinute = sZero.concat(sMinute);
+
         holder.textViewTitle.setText(currentNote.getTitle());
         holder.textViewDescription.setText(currentNote.getDescription());
-        holder.textViewTime.setText(String.valueOf(currentNote.getTime()/100)+":"+String.valueOf((currentNote.getTime()%100)));
+        holder.textViewTime.setText(String.valueOf(currentNote.getTime()/100)+":"+sMinute);
     }
 
     @Override
