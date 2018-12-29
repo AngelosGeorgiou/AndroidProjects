@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
@@ -20,18 +22,27 @@ public class AddNoteActivity extends AppCompatActivity {
     public static final String EXTRA_TIME=
             "com.example.angelosgeorgiou.timetrack.EXTRA_TIME";
 
-    private EditText editTextTitle;
+    private AutoCompleteTextView autocompleteTextTitle;
     private EditText editTextDescription;
     private TimePicker timePickerTime;
+
+    String[] arr = { "Android","Thesis"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
-        editTextTitle = findViewById(R.id.edit_text_title);
+        autocompleteTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         timePickerTime = findViewById(R.id.time_picker_time);
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this,android.R.layout.select_dialog_item, arr);
+
+        autocompleteTextTitle.setThreshold(0);
+        autocompleteTextTitle.setAdapter(adapter);
 
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
@@ -39,7 +50,7 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void saveNote(){
-        String title = editTextTitle.getText().toString();
+        String title = autocompleteTextTitle.getText().toString();
         String description = editTextDescription.getText().toString();
         int time = timePickerTime.getMinute() + 100*timePickerTime.getHour();
 
