@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,10 @@ public class DatePickerFragment extends DialogFragment {
         int month = intCalendar / 100 % 100 - 1;
         int day = intCalendar % 100;
 
-        return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        dialog.getDatePicker().setMaxDate(new Date().getTime());
+        return dialog;
     }
 
 
