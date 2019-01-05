@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onChanged(@Nullable List<Note> notes) {
                 Toast.makeText(MainActivity.this,"mainActivity", Toast.LENGTH_LONG).show();
-                adapter.setNotes(notes);
+                adapter.submitList(notes);
             }
         });
 
