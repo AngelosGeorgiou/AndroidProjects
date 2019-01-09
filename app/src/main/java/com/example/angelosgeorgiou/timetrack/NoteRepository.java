@@ -6,8 +6,10 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-public class NoteRepository {
+public class NoteRepository implements AsyncResult{
+    private MutableLiveData<List<Note>> searchResults = new MutableLiveData<>();
     private NoteDao noteDao;
     private LiveData<List<Note>> allNotes;
 
@@ -36,6 +38,41 @@ public class NoteRepository {
     public LiveData<List<Note>> getAllNotes() {
 
         return allNotes;
+    }
+
+    public void getDateNotes(int date){
+        queryAsyncTask task = new queryAsyncTask(noteDao);
+        task.delegate = this;
+        task.execute(date);
+    }
+
+    public MutableLiveData<List<Note>> getSearchResults(){
+        return searchResults;
+    }
+
+    @Override
+    public void asynFinished(List<Note> results) {
+        searchResults.setValue(results);
+    }
+
+    private static class queryAsyncTask extends AsyncTask<Integer, Void, List<Note>>{
+
+        private NoteDao asyncNoteDao;
+        private NoteRepository delegate = null;
+
+        queryAsyncTask(NoteDao noteDao){
+            asyncNoteDao = noteDao;
+        }
+
+        @Override
+        protected List<Note> doInBackground(Integer... integers) {
+            return asyncNoteDao.getDateNotes(integers[0]);
+        }
+
+        @Override
+        protected void onPostExecute(List<Note> result){
+            delegate.asynFinished(result);
+        }
     }
 
     private static class InsertNoteAsyncTask extends AsyncTask<Note, Void, Void> {

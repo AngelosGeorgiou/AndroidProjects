@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         calendar = Calendar.getInstance();
+
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         setTitle(currentDate);
@@ -61,10 +63,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         recyclerView.setAdapter(adapter);
 
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+//        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Note> notes) {
+//                Toast.makeText(MainActivity.this,"mainActivity", Toast.LENGTH_LONG).show();
+//                adapter.submitList(notes);
+//            }
+//        });
+
+        noteViewModel.getSearchResults().observe(this, new Observer<List<Note>>() {
             @Override
             public void onChanged(@Nullable List<Note> notes) {
-                Toast.makeText(MainActivity.this,"mainActivity", Toast.LENGTH_LONG).show();
                 adapter.submitList(notes);
             }
         });
@@ -80,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
                 noteViewModel.delete(adapter.getNoteAt(viewHolder.getAdapterPosition()));
+                noteViewModel.getDateNotes(getIntDate(getCalendar()));
                 Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
             }
         }).attachToRecyclerView(recyclerView);
@@ -96,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
             }
         });
+        noteViewModel.getDateNotes(getIntDate(getCalendar()));
     }
 
     public int getIntDate(Calendar c){
@@ -141,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         else{
             Toast.makeText(this,"Note not saved",Toast.LENGTH_SHORT).show();
         }
+        noteViewModel.getDateNotes(getIntDate(getCalendar()));
 
 
     }
@@ -151,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(getCalendar().getTime());
         setTitle(currentDate);
+        noteViewModel.getDateNotes(getIntDate(getCalendar()));
     }
 
     public Calendar getCalendar() {

@@ -4,16 +4,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class DatePickerFragment extends DialogFragment {
-
-    private Calendar c;
 
     @NonNull
     @Override
@@ -26,7 +24,7 @@ public class DatePickerFragment extends DialogFragment {
         int day = intCalendar % 100;
 
 
-        DatePickerDialog dialog = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        DatePickerDialog dialog = new DatePickerDialog(Objects.requireNonNull(getActivity()), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
         dialog.getDatePicker().setMaxDate(new Date().getTime());
         return dialog;
     }

@@ -43,6 +43,8 @@ public class AddEditNoteActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item, arr);
 
+        autocompleteTextTitle.setFocusable(true);
+
         autocompleteTextTitle.setThreshold(0);
         autocompleteTextTitle.setAdapter(adapter);
 
