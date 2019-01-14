@@ -1,10 +1,13 @@
 package com.example.angelosgeorgiou.timetrack;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -43,7 +46,10 @@ public class AddEditNoteActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item, arr);
 
-        autocompleteTextTitle.setFocusable(true);
+        autocompleteTextTitle.setSelectAllOnFocus(true);
+        autocompleteTextTitle.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 
         autocompleteTextTitle.setThreshold(0);
         autocompleteTextTitle.setAdapter(adapter);
