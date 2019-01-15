@@ -1,6 +1,7 @@
 package com.example.angelosgeorgiou.timetrack;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
@@ -78,24 +80,24 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }
         });
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT) {
-
-
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-                noteViewModel.delete(adapter.getNoteAt(viewHolder.getAdapterPosition()));
-                noteViewModel.getDateNotes(getIntDate(getCalendar()));
-                Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
-            }
-        }).attachToRecyclerView(recyclerView);
+//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+//                ItemTouchHelper.LEFT) {
+//
+//
+//
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//
+//                noteViewModel.delete(adapter.getNoteAt(viewHolder.getAdapterPosition()));
+//                noteViewModel.getDateNotes(getIntDate(getCalendar()));
+//                Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
+//            }
+//        }).attachToRecyclerView(recyclerView);
 
         adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
             @Override
@@ -112,10 +114,19 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         adapter.setOnItemLongClickListener(new NoteAdapter.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClicked(Note note) {
-                noteViewModel.delete(note);
-                noteViewModel.getDateNotes(getIntDate(getCalendar()));
-                Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
+            public boolean onItemLongClicked(final Note note) {
+
+                final CharSequence[] items = {"Delete "+note.getTitle()};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        noteViewModel.delete(note);
+                        noteViewModel.getDateNotes(getIntDate(getCalendar()));
+                        Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
+                    }
+                });
+                builder.show();
                 return false;
             }
         });
