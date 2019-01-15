@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT) {
+
+
+
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -104,6 +107,16 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 intent.putExtra(AddEditNoteActivity.EXTRA_TIME,note.getTime());
                 startActivityForResult(intent,EDIT_NOTE_REQUEST);
 
+            }
+        });
+
+        adapter.setOnItemLongClickListener(new NoteAdapter.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(Note note) {
+                noteViewModel.delete(note);
+                noteViewModel.getDateNotes(getIntDate(getCalendar()));
+                Toast.makeText(MainActivity.this,"Note deleted", Toast.LENGTH_SHORT ).show();
+                return false;
             }
         });
         noteViewModel.getDateNotes(getIntDate(getCalendar()));

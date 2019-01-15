@@ -1,8 +1,11 @@
 package com.example.angelosgeorgiou.timetrack;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
     private OnItemClickListener listener;
+    private OnItemLongClickListener longListener;
 
     public NoteAdapter() {
         super(DIFF_CALLBACK);
@@ -39,7 +43,7 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
 
     @NonNull
     @Override
-    public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)  {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.note_item, parent, false);
         return new NoteHolder(itemView);
@@ -49,8 +53,8 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
     public void onBindViewHolder(@NonNull NoteHolder holder, int position) {
         Note currentNote = getItem(position);
         int minutes = currentNote.getTime() % 100;
-        String sZero = new String("0");
-        String sMinute = new String(String.valueOf(minutes));
+        String sZero = "0";
+        String sMinute = String.valueOf(minutes);
         if (minutes < 10)
             sMinute = sZero.concat(sMinute);
 
@@ -64,7 +68,7 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
         return getItem(position);
     }
 
-    class NoteHolder extends RecyclerView.ViewHolder {
+    class NoteHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         private TextView textViewTitle;
         private TextView textViewDescription;
         private TextView textViewTime;
@@ -84,6 +88,26 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
                     }
                 }
             });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener(){
+
+                @Override
+                public boolean onLongClick(View view) {
+                    int position = getAdapterPosition();
+                    if (longListener!= null && position != RecyclerView.NO_POSITION) {
+                        longListener.onItemLongClicked(getItem(position));
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            contextMenu.add(this.getAdapterPosition(),121,0,"Delete");
         }
     }
 
@@ -91,7 +115,14 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
         void onItemClick(Note note);
     }
 
+    public interface OnItemLongClickListener {
+        boolean onItemLongClicked(Note note);
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longListener){ this.longListener= longListener;
     }
 }
