@@ -14,12 +14,14 @@ public class NoteViewModel extends AndroidViewModel {
     private NoteRepository repository;
     private LiveData<List<Note>> allNotes;
     private MutableLiveData<List<Note>> searchResults;
+    private LiveData<List<String>> allTitles;
 
     public NoteViewModel(@NonNull Application application) {
         super(application);
         repository = new NoteRepository(application);
         allNotes = repository.getAllNotes();
         searchResults = repository.getSearchResults();
+        allTitles = repository.getAllTitles();
     }
 
     public void insert(Note note){
@@ -42,9 +44,13 @@ public class NoteViewModel extends AndroidViewModel {
         return allNotes;
     }
 
+    public LiveData<List<String>> getAllTitles(){ return allTitles;}
+
     MutableLiveData<List<Note>> getSearchResults(){
         return searchResults;
     }
 
     public void getDateNotes(int date){ repository.getDateNotes(date);}
+
+//    public void updateTitles() { repository.updateTitles();}
 }

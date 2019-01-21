@@ -15,7 +15,10 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 public class AddEditNoteActivity extends AppCompatActivity {
     public static final String EXTRA_ID =
@@ -31,7 +34,8 @@ public class AddEditNoteActivity extends AppCompatActivity {
     private EditText editTextDescription;
     private TimePicker timePickerTime;
 
-    String[] arr = {"Android", "Thesis"};
+
+//    String[] arr = {"Android", "Thesis"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +47,12 @@ public class AddEditNoteActivity extends AppCompatActivity {
         timePickerTime = findViewById(R.id.time_picker_time);
 
 
+        Intent intent = getIntent();
+        String [] allTitles = intent.getStringArrayExtra(MainActivity.EXTRA_ALLTITLES);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, arr);
+                (this, android.R.layout.select_dialog_item, allTitles);
+
 
         autocompleteTextTitle.setSelectAllOnFocus(true);
         autocompleteTextTitle.requestFocus();
@@ -55,12 +63,13 @@ public class AddEditNoteActivity extends AppCompatActivity {
         autocompleteTextTitle.setAdapter(adapter);
 
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
-        Intent intent = getIntent();
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         //Triggers only if it contains ID => update condition
         if (intent.hasExtra(EXTRA_ID)) {
+
             setTitle("Edit Note");
             autocompleteTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
             editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
@@ -73,7 +82,7 @@ public class AddEditNoteActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        String title = autocompleteTextTitle.getText().toString();
+        String title = autocompleteTextTitle.getText().toString().trim();
         String description = editTextDescription.getText().toString();
         int time = timePickerTime.getMinute() + 100 * timePickerTime.getHour();
 

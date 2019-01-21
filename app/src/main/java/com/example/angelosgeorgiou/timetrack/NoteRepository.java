@@ -12,11 +12,15 @@ public class NoteRepository implements AsyncResult{
     private MutableLiveData<List<Note>> searchResults = new MutableLiveData<>();
     private NoteDao noteDao;
     private LiveData<List<Note>> allNotes;
+    private LiveData<List<String>> allTitles;
+    private int test = 0;
 
     public NoteRepository(Application application) {
         NoteDatabase database = NoteDatabase.getInstance(application);
         noteDao = database.noteDao();
         allNotes = noteDao.getAllNotes();
+        allTitles = noteDao.getTitles();
+
     }
 
     public void insert(Note note) {
@@ -35,10 +39,15 @@ public class NoteRepository implements AsyncResult{
         new DeleteAllNotesAsyncTask(noteDao).execute();
     }
 
-    public LiveData<List<Note>> getAllNotes() {
+    public LiveData<List<Note>> getAllNotes() { return allNotes; }
 
-        return allNotes;
-    }
+    public LiveData<List<String>> getAllTitles() { return allTitles;}
+
+//    public void updateTitles() {
+//        GetTitlesAsyncTask task = new GetTitlesAsyncTask(noteDao);
+//        task.delegate = this;
+//        task.execute();
+//    }
 
     public void getDateNotes(int date){
         queryAsyncTask task = new queryAsyncTask(noteDao);
@@ -54,6 +63,12 @@ public class NoteRepository implements AsyncResult{
     public void asynFinished(List<Note> results) {
         searchResults.setValue(results);
     }
+
+//    @Override
+//    public void asynFinished(String[] results) {
+//        this.allTitles = getAllTitles();
+//        this.test = getAllTitles().length;
+//    }
 
     private static class queryAsyncTask extends AsyncTask<Integer, Void, List<Note>>{
 
@@ -74,6 +89,24 @@ public class NoteRepository implements AsyncResult{
             delegate.asynFinished(result);
         }
     }
+
+//    private static class GetTitlesAsyncTask extends AsyncTask<Void, Void, String[]>{
+//
+//        private NoteDao asyncNoteDao;
+//        private NoteRepository delegate = null;
+//
+//        GetTitlesAsyncTask(NoteDao noteDao){ asyncNoteDao = noteDao; }
+//
+//        @Override
+//        protected String[] doInBackground(Void... voids) {
+//            return asyncNoteDao.getTitles();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String[] result){
+//            delegate.asynFinished(result);
+//        }
+//    }
 
     private static class InsertNoteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteDao noteDao;

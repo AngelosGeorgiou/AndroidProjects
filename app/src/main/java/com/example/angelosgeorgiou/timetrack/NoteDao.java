@@ -30,4 +30,7 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note_table ORDER BY time")
     LiveData<List<Note>> getAllNotes();
+
+    @Query("SELECT DISTINCT title FROM note_table")
+    LiveData<List<String>> getTitles();
 }

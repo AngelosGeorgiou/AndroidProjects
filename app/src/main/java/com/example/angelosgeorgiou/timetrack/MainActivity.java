@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public static final int ADD_NOTE_REQUEST = 1;
     public static final int EDIT_NOTE_REQUEST = 2;
+    public static final String EXTRA_ALLTITLES =
+            "com.example.angelosgeorgiou.timetrack.EXTRA_ALLTITLES";
 
     private NoteViewModel noteViewModel;
     public Calendar calendar;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         calendar = Calendar.getInstance();
-
+        final String[] allTitles;
 
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         setTitle(currentDate);
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddEditNoteActivity.class);
+//                noteViewModel.updateTitles();
+                List<String> allTitles = noteViewModel.getAllTitles().getValue();
+                intent.putExtra(EXTRA_ALLTITLES,allTitles.toArray(new String[0]));
                 startActivityForResult(intent, ADD_NOTE_REQUEST);
             }
         });
@@ -79,7 +85,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 adapter.submitList(notes);
             }
         });
+        noteViewModel.getAllTitles().observe(this, new Observer<List<String>>() {
+            @Override
+            public void onChanged(List<String> strings) {
+                List<String> allTitlesTemp = noteViewModel.getAllTitles().getValue();
 
+            }
+        });
 //        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
 //                ItemTouchHelper.LEFT) {
 //
@@ -102,11 +114,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         adapter.setOnItemClickListener(new NoteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Note note) {
+
                 Intent intent = new Intent(MainActivity.this, AddEditNoteActivity.class);
                 intent.putExtra(AddEditNoteActivity.EXTRA_ID,note.getId());
                 intent.putExtra(AddEditNoteActivity.EXTRA_TITLE,note.getTitle());
                 intent.putExtra(AddEditNoteActivity.EXTRA_DESCRIPTION,note.getDescription());
                 intent.putExtra(AddEditNoteActivity.EXTRA_TIME,note.getTime());
+                intent.putExtra(EXTRA_ALLTITLES,noteViewModel.getAllTitles().getValue().toArray(new String[0]));
                 startActivityForResult(intent,EDIT_NOTE_REQUEST);
 
             }
