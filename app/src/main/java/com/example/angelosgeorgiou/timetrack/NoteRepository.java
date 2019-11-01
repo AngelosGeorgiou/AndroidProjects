@@ -60,12 +60,12 @@ public class NoteRepository implements AsyncResult{
     }
 
     @Override
-    public void asynFinished(List<Note> results) {
+    public void asyncFinished(List<Note> results) {
         searchResults.setValue(results);
     }
 
 //    @Override
-//    public void asynFinished(String[] results) {
+//    public void asyncFinished(String[] results) {
 //        this.allTitles = getAllTitles();
 //        this.test = getAllTitles().length;
 //    }
@@ -86,7 +86,7 @@ public class NoteRepository implements AsyncResult{
 
         @Override
         protected void onPostExecute(List<Note> result){
-            delegate.asynFinished(result);
+            delegate.asyncFinished(result);
         }
     }
 
@@ -104,7 +104,7 @@ public class NoteRepository implements AsyncResult{
 //
 //        @Override
 //        protected void onPostExecute(String[] result){
-//            delegate.asynFinished(result);
+//            delegate.asyncFinished(result);
 //        }
 //    }
 

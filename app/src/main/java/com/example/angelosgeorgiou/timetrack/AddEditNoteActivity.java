@@ -35,7 +35,6 @@ public class AddEditNoteActivity extends AppCompatActivity {
     private TimePicker timePickerTime;
 
 
-//    String[] arr = {"Android", "Thesis"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
